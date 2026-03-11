@@ -1,0 +1,14 @@
+{
+    "name": "school/menu",
+    "description": "Генератор ежедневного школьного меню",
+    "require": {
+        "php": ">=7.4",
+        "phpoffice/phpspreadsheet": "^2.0",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Menu\\": "src/"
+        }
+    }
+}

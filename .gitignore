@@ -1,0 +1,31 @@
+# Конфигурация с секретами
+food-app/config.php
+
+# Зависимости composer
+food-app/vendor/
+
+# Сгенерированные Excel-файлы
+food/*.xlsx
+
+# Временные файлы Windows
+*.Zone.Identifier
+*:Zone.Identifier
+
+# Настройки Claude
+.claude/
+**/.claude/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
+
+# Папка для сравнения (локальные тесты)
+food-app/compare/
+
+# Скриншоты и медиа (локальные)
+*.png
+*.jpg
+*.jpeg

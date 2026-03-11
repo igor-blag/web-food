@@ -1,0 +1,13 @@
+# Запрещаем прямой доступ к служебным файлам
+<FilesMatch "^(config\.php|schema\.sql|composer\.(json|lock))$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Запрещаем доступ к служебным папкам
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(src|cron|vendor)/ - [F,L]
+</IfModule>
+
+Options -Indexes
