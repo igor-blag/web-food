@@ -8,6 +8,7 @@ require_once $adminRoot . '/config.php';
 require_once $adminRoot . '/src/db.php';
 
 $enabledDepts = get_enabled_departments();
+$orgName      = get_org_name();
 $validTypes   = array_column($enabledDepts, 'code');
 $typeLabels   = array_combine(
     array_column($enabledDepts, 'code'),
@@ -65,15 +66,26 @@ $mealNames = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Типовое меню</title>
+    <title>Типовое меню<?= $orgName ? ' | ' . htmlspecialchars($orgName) : '' ?></title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
-    <div class="logo">Мониторинг питания</div>
+    <div class="logo"><?= htmlspecialchars($orgName ?: 'Организация питания') ?></div>
     <nav>
         <a href="../index.php?type=<?= $type ?>">Календарь</a>
-        <a href="menu.php?type=<?= $type ?>" class="active">Типовое меню</a>
+        <div class="nav-dropdown active" tabindex="0">
+            <a href="menu.php?type=<?= $type ?>">Типовое меню</a>
+            <div class="nav-dropdown-menu">
+                <?php foreach ($enabledDepts as $dept): ?>
+                <a href="menu.php?type=<?= htmlspecialchars($dept['code']) ?>"
+                   <?= $dept['code'] === $type ? 'class="active"' : '' ?>>
+                    <?= htmlspecialchars($dept['label']) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <a href="../oc.php">Общ. контроль</a>
     </nav>
 </header>
 
@@ -145,5 +157,8 @@ $mealNames = [
     <?php endif; ?>
     <?php endif; ?>
 </div>
+<footer>
+    <a href="https://github.com/igor-blag/web-food" target="_blank" rel="noopener">github.com/igor-blag/web-food</a>
+</footer>
 </body>
 </html>

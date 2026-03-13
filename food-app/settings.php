@@ -365,6 +365,24 @@ foreach ($departments as $d) {
         </div>
     </div>
 
+    <!-- Типовое меню — утверждающее лицо -->
+    <div class="panel">
+        <div class="panel-title">Типовое примерное меню — утверждающее лицо</div>
+        <p class="text-muted mb-2">ФИО и должность отображаются в шапке файла типового меню (tm-файл).</p>
+        <div class="form-group">
+            <label>Должность</label>
+            <input type="text" id="tm-approver-position" class="form-control"
+                   value="<?= htmlspecialchars($settings['tm_approver_position'] ?? '') ?>"
+                   placeholder="Например: Директор школы">
+        </div>
+        <div class="form-group">
+            <label>ФИО</label>
+            <input type="text" id="tm-approver-name" class="form-control"
+                   value="<?= htmlspecialchars($settings['tm_approver_name'] ?? '') ?>"
+                   placeholder="Например: Иванова А.Б.">
+        </div>
+    </div>
+
     <!-- Сохранить -->
     <div class="mt-2" style="text-align:right">
         <button type="button" class="btn btn-primary" id="btn-save">Сохранить настройки</button>
@@ -440,6 +458,8 @@ foreach ($departments as $d) {
         apiPost({
             action:   'save_settings',
             org_name: document.getElementById('org-name').value,
+            tm_approver_position: document.getElementById('tm-approver-position').value,
+            tm_approver_name:     document.getElementById('tm-approver-name').value,
             academic_year_start: document.getElementById('ay-start').value.trim(),
             academic_year_end:   document.getElementById('ay-end').value.trim(),
             reset_cycle_after_vacation: document.getElementById('ay-reset').checked ? 1 : 0,

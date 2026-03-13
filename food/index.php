@@ -8,6 +8,7 @@ require_once $adminRoot . '/config.php';
 require_once $adminRoot . '/src/db.php';
 
 $enabledDepts = get_enabled_departments();
+$orgName      = get_org_name();
 $validTypes   = array_column($enabledDepts, 'code');
 $typeLabels   = array_combine(
     array_column($enabledDepts, 'code'),
@@ -63,20 +64,30 @@ function calUrl(string $type, int $y, int $m): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Питание — Расписание меню</title>
+    <title>Организация питания<?= $orgName ? ' | ' . htmlspecialchars($orgName) : '' ?></title>
     <link rel="stylesheet" href="menu/assets/style.css">
 </head>
 <body>
 <header>
-    <div class="logo">Мониторинг питания</div>
+    <div class="logo"><?= htmlspecialchars($orgName ?: 'Организация питания') ?></div>
     <nav>
         <a href="index.php?type=<?= $type ?>" class="active">Календарь</a>
-        <a href="menu/menu.php?type=<?= $type ?>">Типовое меню</a>
+        <div class="nav-dropdown" tabindex="0">
+            <a href="menu/menu.php?type=<?= $type ?>">Типовое меню</a>
+            <div class="nav-dropdown-menu">
+                <?php foreach ($enabledDepts as $dept): ?>
+                <a href="menu/menu.php?type=<?= htmlspecialchars($dept['code']) ?>">
+                    <?= htmlspecialchars($dept['label']) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <a href="oc.php">Общ. контроль</a>
     </nav>
 </header>
 
 <div class="container">
-    <div class="page-title">Расписание питания</div>
+    <div class="page-title">Календарь питания</div>
 
     <!-- Табы типов школ -->
     <div class="cycle-tabs">
@@ -149,24 +160,9 @@ function calUrl(string $type, int $y, int $m): string {
         <div class="legend-item"><div class="legend-dot holiday"></div> Выходной / праздник</div>
     </div>
 
-    <?php
-    $tmFile = FILES_DIR . 'tm' . $year . '-sm.xlsx';
-    $kpFile = FILES_DIR . 'kp' . $year . '.xlsx';
-    if (file_exists($tmFile) || file_exists($kpFile)): ?>
-    <div style="margin-top:24px">
-        <div class="page-title" style="font-size:1rem">Документы</div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
-            <?php if (file_exists($tmFile)): ?>
-            <a href="<?= FILES_URL ?>tm<?= $year ?>-sm.xlsx" class="btn btn-outline" download>
-                ↓ Типовое меню <?= $year ?></a>
-            <?php endif; ?>
-            <?php if (file_exists($kpFile)): ?>
-            <a href="<?= FILES_URL ?>kp<?= $year ?>.xlsx" class="btn btn-outline" download>
-                ↓ Кп <?= $year ?></a>
-            <?php endif; ?>
-        </div>
-    </div>
-    <?php endif; ?>
 </div>
+<footer>
+    <a href="https://github.com/igor-blag/web-food" target="_blank" rel="noopener">github.com/igor-blag/web-food</a>
+</footer>
 </body>
 </html>

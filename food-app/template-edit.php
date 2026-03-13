@@ -60,6 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Автогенерация tm-файла при сохранении sm-шаблона
     if ($tpl['school_type'] === 'sm') {
         require_once __DIR__ . '/src/tm_generator.php';
+        $approveDate = trim($_POST['tm_approve_date'] ?? '');
+        if ($approveDate) {
+            save_tm_approve_date($approveDate);
+        }
         generate_typical_menu_excel('sm', (int)date('Y'));
     }
 
@@ -184,6 +188,21 @@ $sectionMeta = [
         </button>
     </div>
     <?php endforeach; ?>
+
+    <?php if ($tpl['school_type'] === 'sm'): ?>
+    <?php $storedDate = get_kitchen_settings()['tm_approve_date'] ?? ''; ?>
+    <div class="panel" style="margin-top:12px;padding:12px 16px">
+        <div style="font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px">
+            Типовое меню — дата утверждения
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+            <input type="date" name="tm_approve_date"
+                   value="<?= htmlspecialchars($storedDate) ?>"
+                   style="padding:6px 10px;font-family:Georgia,serif;font-size:.9rem;border:1px solid var(--border-light);border-radius:var(--radius);color:var(--text)">
+            <span style="font-size:.82rem;color:var(--muted)">Будет записана в шапку tm-файла при сохранении</span>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="flex gap-2 mt-3">
         <button type="submit" class="btn btn-primary">Сохранить шаблон</button>

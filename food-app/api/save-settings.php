@@ -12,6 +12,13 @@ if ($action === 'save_settings') {
     $org_name = trim($input['org_name'] ?? '');
     save_kitchen_settings($org_name);
 
+    if (isset($input['tm_approver_position']) || isset($input['tm_approver_name'])) {
+        save_tm_approver(
+            trim($input['tm_approver_position'] ?? ''),
+            trim($input['tm_approver_name'] ?? '')
+        );
+    }
+
     // Учебный год
     if (isset($input['academic_year_start'])) {
         save_academic_year_settings(

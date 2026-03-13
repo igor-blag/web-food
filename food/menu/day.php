@@ -13,6 +13,7 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || !strtotime($date)) {
 }
 
 $enabledDepts = get_enabled_departments();
+$orgName      = get_org_name();
 $validTypes   = array_column($enabledDepts, 'code');
 $typeLabels   = array_combine(
     array_column($enabledDepts, 'code'),
@@ -76,15 +77,25 @@ $backUrl = '../index.php?type=' . $type . '&y=' . $dt->format('Y') . '&m=' . (in
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Меню на <?= htmlspecialchars($date) ?></title>
+    <title>Меню на <?= htmlspecialchars($date) ?><?= $orgName ? ' | ' . htmlspecialchars($orgName) : '' ?></title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
-    <div class="logo">Мониторинг питания</div>
+    <div class="logo"><?= htmlspecialchars($orgName ?: 'Организация питания') ?></div>
     <nav>
         <a href="../index.php?type=<?= $type ?>">Календарь</a>
-        <a href="menu.php?type=<?= $type ?>">Типовое меню</a>
+        <div class="nav-dropdown" tabindex="0">
+            <a href="menu.php?type=<?= $type ?>">Типовое меню</a>
+            <div class="nav-dropdown-menu">
+                <?php foreach ($enabledDepts as $dept): ?>
+                <a href="menu.php?type=<?= htmlspecialchars($dept['code']) ?>">
+                    <?= htmlspecialchars($dept['label']) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <a href="../oc.php">Общ. контроль</a>
     </nav>
 </header>
 
@@ -157,5 +168,8 @@ $backUrl = '../index.php?type=' . $type . '&y=' . $dt->format('Y') . '&m=' . (in
 
     <?php endif; ?>
 </div>
+<footer>
+    <a href="https://github.com/igor-blag/web-food" target="_blank" rel="noopener">github.com/igor-blag/web-food</a>
+</footer>
 </body>
 </html>

@@ -84,6 +84,9 @@ CREATE TABLE IF NOT EXISTS `kitchen_settings` (
     `academic_year_start` VARCHAR(5) NOT NULL DEFAULT '09-01' COMMENT 'MM-DD начало учебного года',
     `academic_year_end`   VARCHAR(5) NOT NULL DEFAULT '05-31' COMMENT 'MM-DD конец учебного года',
     `reset_cycle_after_vacation` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Сбрасывать цикл меню после каникул',
+    `tm_approver_position` VARCHAR(100) NOT NULL DEFAULT '' COMMENT 'Должность утверждающего ТМ',
+    `tm_approver_name`     VARCHAR(100) NOT NULL DEFAULT '' COMMENT 'ФИО утверждающего ТМ',
+    `tm_approve_date`      DATE         DEFAULT NULL        COMMENT 'Дата утверждения ТМ',
     `updated_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -126,5 +129,42 @@ CREATE TABLE IF NOT EXISTS `vacations` (
     INDEX `idx_year`  (`academic_year`),
     INDEX `idx_dates` (`date_from`, `date_to`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ─── Общественный контроль питания ───────────────────────────
+
+CREATE TABLE IF NOT EXISTS `oc_monitoring` (
+    `id`               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `school_name`      VARCHAR(255) NOT NULL DEFAULT '',
+    `report_date`      DATE         DEFAULT NULL,
+    -- Раздел 1: Положение и приказ о создании комиссии
+    `s1_url`           VARCHAR(500) NOT NULL DEFAULT '',
+    -- Раздел 2: Формы интерактивного взаимодействия
+    `s2_hotline`       VARCHAR(255) NOT NULL DEFAULT '',
+    `s2_chat_url`      VARCHAR(500) NOT NULL DEFAULT '',
+    `s2_forum_url`     VARCHAR(500) NOT NULL DEFAULT '',
+    -- Раздел 3: Лечебные/диетические меню (до 4 позиций)
+    `s3_diet1_type`    VARCHAR(255) NOT NULL DEFAULT '',
+    `s3_diet1_url`     VARCHAR(500) NOT NULL DEFAULT '',
+    `s3_diet2_type`    VARCHAR(255) NOT NULL DEFAULT '',
+    `s3_diet2_url`     VARCHAR(500) NOT NULL DEFAULT '',
+    `s3_diet3_type`    VARCHAR(255) NOT NULL DEFAULT '',
+    `s3_diet3_url`     VARCHAR(500) NOT NULL DEFAULT '',
+    `s3_diet4_type`    VARCHAR(255) NOT NULL DEFAULT '',
+    `s3_diet4_url`     VARCHAR(500) NOT NULL DEFAULT '',
+    -- Раздел 4: Анкетирование
+    `s4_survey_url`    VARCHAR(500) NOT NULL DEFAULT '',
+    `s4_results_url`   VARCHAR(500) NOT NULL DEFAULT '',
+    -- Раздел 5: Информация о здоровом питании
+    `s5_page_url`      VARCHAR(500) NOT NULL DEFAULT '',
+    `s5_materials_url` VARCHAR(500) NOT NULL DEFAULT '',
+    -- Раздел 6: Результаты контрольных мероприятий
+    `s6_acts_url`      VARCHAR(500) NOT NULL DEFAULT '',
+    `s6_photos_url`    VARCHAR(500) NOT NULL DEFAULT '',
+    -- Раздел 7: Оценка пищевых отходов
+    `s7_waste_level`   ENUM('20','30','40','50','none') NOT NULL DEFAULT 'none',
+    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO `oc_monitoring` (`id`) VALUES (1);
 
 -- Первый администратор создаётся через setup.php

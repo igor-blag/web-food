@@ -60,6 +60,46 @@ header nav a {
 header nav a:hover { color: var(--orange-light); opacity: 1; }
 header nav a.active { color: var(--orange-light); opacity: 1; }
 
+/* ── Dropdown в шапке ───────────────────────────────────── */
+header nav {
+    display: flex;
+    align-items: center;
+}
+.nav-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.nav-dropdown > a::after {
+    content: ' ▾';
+    font-size: 0.7em;
+    vertical-align: middle;
+}
+.nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--bg-header);
+    border: 1px solid var(--orange);
+    min-width: 200px;
+    z-index: 200;
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu {
+    display: block;
+}
+.nav-dropdown-menu a {
+    display: block;
+    padding: 9px 18px;
+    margin: 0;
+    border-bottom: 1px solid rgba(200, 88, 10, 0.2);
+    white-space: nowrap;
+    opacity: 0.9;
+}
+.nav-dropdown-menu a:last-child { border-bottom: none; }
+.nav-dropdown-menu a:hover { background: rgba(200, 88, 10, 0.15); color: var(--orange-light); opacity: 1; }
+
 /* ── Контейнер ─────────────────────────────────────────── */
 .container {
     max-width: 960px;
@@ -331,3 +371,19 @@ hr.ornament::before { content: '— ✦ —'; }
     header .logo { font-size: 0.9rem; }
     header nav a { margin-left: 10px; font-size: 0.78rem; }
 }
+
+/* ── Подвал ─────────────────────────────────────────────── */
+footer {
+    margin-top: 40px;
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+footer a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--border-light);
+}
+footer a:hover { color: var(--orange); }

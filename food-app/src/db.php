@@ -255,6 +255,18 @@ function save_kitchen_settings(string $org_name): void
     $s->execute([$org_name]);
 }
 
+function save_tm_approver(string $position, string $name): void
+{
+    $s = db()->prepare('UPDATE kitchen_settings SET tm_approver_position = ?, tm_approver_name = ? WHERE id = 1');
+    $s->execute([$position, $name]);
+}
+
+function save_tm_approve_date(?string $date): void
+{
+    $s = db()->prepare('UPDATE kitchen_settings SET tm_approve_date = ? WHERE id = 1');
+    $s->execute([$date ?: null]);
+}
+
 function get_org_name(): string
 {
     return get_kitchen_settings()['org_name'];
@@ -579,4 +591,62 @@ function get_vacation_days_for_range(string $from, string $to): array
         }
     }
     return $days;
+}
+
+// ─── Общественный контроль питания ───────────────────────────────────────────
+
+function get_oc_monitoring(): array
+{
+    $row = db()->query('SELECT * FROM oc_monitoring WHERE id=1')->fetch();
+    return $row ?: [
+        'school_name' => '', 'report_date' => '', 's1_url' => '',
+        's2_hotline' => '', 's2_chat_url' => '', 's2_forum_url' => '',
+        's3_diet1_type' => '', 's3_diet1_url' => '',
+        's3_diet2_type' => '', 's3_diet2_url' => '',
+        's3_diet3_type' => '', 's3_diet3_url' => '',
+        's3_diet4_type' => '', 's3_diet4_url' => '',
+        's4_survey_url' => '', 's4_results_url' => '',
+        's5_page_url' => '', 's5_materials_url' => '',
+        's6_acts_url' => '', 's6_photos_url' => '',
+        's7_waste_level' => 'none',
+    ];
+}
+
+function save_oc_monitoring(array $d): void
+{
+    db()->prepare('
+        INSERT INTO oc_monitoring (id, school_name, report_date, s1_url,
+            s2_hotline, s2_chat_url, s2_forum_url,
+            s3_diet1_type, s3_diet1_url, s3_diet2_type, s3_diet2_url,
+            s3_diet3_type, s3_diet3_url, s3_diet4_type, s3_diet4_url,
+            s4_survey_url, s4_results_url, s5_page_url, s5_materials_url,
+            s6_acts_url, s6_photos_url, s7_waste_level)
+        VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            school_name=VALUES(school_name), report_date=VALUES(report_date),
+            s1_url=VALUES(s1_url),
+            s2_hotline=VALUES(s2_hotline), s2_chat_url=VALUES(s2_chat_url),
+            s2_forum_url=VALUES(s2_forum_url),
+            s3_diet1_type=VALUES(s3_diet1_type), s3_diet1_url=VALUES(s3_diet1_url),
+            s3_diet2_type=VALUES(s3_diet2_type), s3_diet2_url=VALUES(s3_diet2_url),
+            s3_diet3_type=VALUES(s3_diet3_type), s3_diet3_url=VALUES(s3_diet3_url),
+            s3_diet4_type=VALUES(s3_diet4_type), s3_diet4_url=VALUES(s3_diet4_url),
+            s4_survey_url=VALUES(s4_survey_url), s4_results_url=VALUES(s4_results_url),
+            s5_page_url=VALUES(s5_page_url), s5_materials_url=VALUES(s5_materials_url),
+            s6_acts_url=VALUES(s6_acts_url), s6_photos_url=VALUES(s6_photos_url),
+            s7_waste_level=VALUES(s7_waste_level)
+    ')->execute([
+        $d['school_name'] ?: null,
+        $d['report_date']  ?: null,
+        $d['s1_url'],
+        $d['s2_hotline'], $d['s2_chat_url'], $d['s2_forum_url'],
+        $d['s3_diet1_type'], $d['s3_diet1_url'],
+        $d['s3_diet2_type'], $d['s3_diet2_url'],
+        $d['s3_diet3_type'], $d['s3_diet3_url'],
+        $d['s3_diet4_type'], $d['s3_diet4_url'],
+        $d['s4_survey_url'], $d['s4_results_url'],
+        $d['s5_page_url'], $d['s5_materials_url'],
+        $d['s6_acts_url'], $d['s6_photos_url'],
+        $d['s7_waste_level'],
+    ]);
 }
