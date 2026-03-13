@@ -127,21 +127,96 @@ php -S localhost:8000
     └─→ если ≤ 3 дней → email-напоминание на ADMIN_EMAIL
 ```
 
-### Крон (хостинг Jino)
+### Крон
 
 ```
-0 7 * * * php /home/LOGIN/public_html/food-app/cron/daily.php
+0 7 * * * php /путь/до/food-app/cron/daily.php
 ```
 
 ## Развёртывание на хостинге
 
-1. Загрузить `food-app/` и `food/` на хостинг
-2. Создать БД, импортировать `schema.sql`
-3. Заполнить `food-app/config.php`
-4. Убедиться, что `food/` и `food/oc/` доступны по URL и PHP может писать в них файлы
-5. Открыть `food-app/setup.php` → создать учётную запись администратора
-6. Настроить крон
-7. Проверить, что `food-app/.htaccess` закрывает прямой доступ к admin-зоне
+### 1. Загрузить файлы
+
+Через FTP/SFTP скопировать две папки в корень сайта (`public_html/` или аналог):
+
+```
+public_html/
+├── food-app/
+└── food/
+```
+
+Папка `food-app/vendor/` уже содержит зависимости — запускать Composer на сервере не нужно.
+
+### 2. Создать базу данных
+
+В панели управления хостинга создать базу данных MySQL и пользователя. Импортировать схему:
+
+```bash
+mysql -h хост -u пользователь -p имя_бд < food-app/schema.sql
+```
+
+### 3. Заполнить `food-app/config.php`
+
+```php
+define('DB_HOST',   'localhost');
+define('DB_NAME',   'имя_бд');
+define('DB_USER',   'пользователь');
+define('DB_PASS',   'пароль');
+
+define('APP_SECRET', 'случайная_строка_32+_символа');
+
+define('FILES_DIR', __DIR__ . '/../food/');
+define('FILES_URL', '/food/');
+
+define('DELETE_AFTER_DAYS', 14);
+define('APP_TZ', 'Europe/Moscow');
+
+define('MAIL_FROM',      'noreply@ваш-домен.ru');
+define('MAIL_FROM_NAME', 'Система питания');
+define('ADMIN_EMAIL',    'ответственный@ваш-домен.ru');
+define('TOKEN_TTL_MIN',  30);
+
+// SMTP-настройки (опционально; при пустом SMTP_HOST используется php mail())
+define('SMTP_HOST',   '');
+define('SMTP_USER',   '');
+define('SMTP_PASS',   '');
+define('SMTP_PORT',   587);
+define('SMTP_SECURE', 'tls');
+```
+
+### 4. Права на папку `food/`
+
+PHP должен иметь право создавать файлы в `food/` и `food/oc/`:
+
+```bash
+chmod 755 public_html/food/
+chmod 755 public_html/food/oc/
+```
+
+### 5. Создать учётную запись администратора
+
+Открыть в браузере:
+
+```
+https://ваш-домен.ru/food-app/setup.php
+```
+
+Пройти три шага: ввод email → код из письма → логин и пароль.
+
+### 6. Настроить крон
+
+В панели управления хостинга добавить задание:
+
+| Поле | Значение |
+|------|---------|
+| Команда | `php /полный/путь/до/food-app/cron/daily.php` |
+| Расписание | `0 7 * * *` (каждый день в 07:00) |
+
+### 7. Проверить
+
+- `https://ваш-домен.ru/food/` — публичный сайт открывается
+- `https://ваш-домен.ru/food-app/` — отображается форма входа (не листинг файлов)
+- Войти в админку → **Настройки** → заполнить название ОО и отделения
 
 ## Лицензия
 
