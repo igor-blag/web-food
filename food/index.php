@@ -49,6 +49,10 @@ $prevDt = $reqDt->modify('-1 month');
 $nextDt = $reqDt->modify('+1 month');
 $today  = $todayDt->format('Y-m-d');
 
+$monthFrom = sprintf('%04d-%02d-01', $year, $month);
+$monthTo   = sprintf('%04d-%02d-%02d', $year, $month, $daysInMonth);
+$vacationDays = get_vacation_days_for_range($monthFrom, $monthTo);
+
 $monthNames = [
     1=>'Январь',2=>'Февраль',3=>'Март',4=>'Апрель',5=>'Май',6=>'Июнь',
     7=>'Июль',8=>'Август',9=>'Сентябрь',10=>'Октябрь',11=>'Ноябрь',12=>'Декабрь',
@@ -132,10 +136,13 @@ function calUrl(string $type, int $y, int $m): string {
             $hasMenu   = $entry && $entry['template_id'] !== null;
             $isHoliday = $entry && $entry['template_id'] === null;
 
+            $isVacation = isset($vacationDays[$dateStr]);
+
             $classes = ['cal-cell'];
             if ($dateStr === $today) $classes[] = 'today';
             if ($hasMenu)            $classes[] = 'has-menu';
             elseif ($isHoliday)      $classes[] = 'holiday';
+            elseif ($isVacation)     $classes[] = 'vacation';
             elseif ($isWeekend)      $classes[] = 'weekend';
         ?>
             <div class="<?= implode(' ', $classes) ?>">
@@ -158,6 +165,7 @@ function calUrl(string $type, int $y, int $m): string {
         <div class="legend-item"><div class="legend-dot has-menu"></div> Меню опубликовано</div>
         <div class="legend-item"><div class="legend-dot no-menu"></div> Нет данных</div>
         <div class="legend-item"><div class="legend-dot holiday"></div> Выходной / праздник</div>
+        <div class="legend-item"><div class="legend-dot vacation"></div> Каникулы</div>
     </div>
 
 </div>

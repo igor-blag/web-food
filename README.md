@@ -48,15 +48,14 @@ web-food-app/
 
 - PHP 8.1+
 - MySQL 8.0+
-- Composer
 
 ### Установка
 
 ```bash
 git clone https://github.com/igor-blag/web-food.git
-cd web-food/food-app
-composer install
 ```
+
+Зависимости (PhpSpreadsheet, PHPMailer) уже включены в репозиторий в папке `food-app/vendor/` — запускать Composer не нужно.
 
 Создать базу данных и применить схему:
 

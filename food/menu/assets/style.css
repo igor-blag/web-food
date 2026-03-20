@@ -78,12 +78,14 @@ header nav {
 .nav-dropdown-menu {
     display: none;
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     right: 0;
     background: var(--bg-header);
     border: 1px solid var(--orange);
+    border-top: none;
     min-width: 200px;
     z-index: 200;
+    padding-top: 4px;
 }
 .nav-dropdown:hover .nav-dropdown-menu,
 .nav-dropdown:focus-within .nav-dropdown-menu {
@@ -175,6 +177,7 @@ header nav {
 .cal-cell.empty   { background: var(--bg); }
 .cal-cell.weekend { background: #f7f0e8; }
 .cal-cell.holiday { background: #f5ebe0; }
+.cal-cell.vacation { background: #f1eaf8; }
 .cal-cell.has-menu { background: #eef5e8; }
 .cal-cell.today { outline: 2px solid var(--orange); outline-offset: -2px; }
 .cal-cell .day-num {
@@ -214,13 +217,15 @@ header nav {
     color: var(--muted);
 }
 .legend-dot {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
     border: 1px solid var(--border-light);
+    flex-shrink: 0;
 }
-.legend-dot.has-menu { background: #eef5e8; }
+.legend-dot.has-menu { background: #82c45e; }
 .legend-dot.no-menu  { background: #fff; }
-.legend-dot.holiday  { background: #f5ebe0; }
+.legend-dot.holiday  { background: #d4a06a; }
+.legend-dot.vacation { background: #9b72c8; }
 
 /* ── Меню дня ───────────────────────────────────────────── */
 .menu-date {

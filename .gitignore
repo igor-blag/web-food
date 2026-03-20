@@ -1,11 +1,15 @@
 # Конфигурация с секретами
 food-app/config.php
 
-# Зависимости composer
-food-app/vendor/
-
 # Сгенерированные Excel-файлы
 food/*.xlsx
+
+# Архив vendor (в репозитории хранится папка vendor/, не zip)
+food-app/vendor.zip
+
+# Локальные инструменты разработки
+mailhog
+router.php
 
 # Временные файлы Windows
 *.Zone.Identifier

@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  */
 function generate_oc_excel(array $d): string
 {
-    $templatePath = __DIR__ . '/../../oc/findex-template.xlsx';
+    $templatePath = FILES_DIR . 'oc/findex-template.xlsx';
     $spreadsheet  = IOFactory::load($templatePath);
     $sheet        = $spreadsheet->getActiveSheet();
 
